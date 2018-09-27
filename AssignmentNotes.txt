@@ -1,0 +1,96 @@
+Name: Tim J. Dempsey
+Student ID: 19390664
+Contents: Notes about the UCP Assignment.
+
+Basic Program premise:
+1. Read commands from a file;
+2. Convert ANGLES and DISTANCES to (x,y) coordinates;
+3. Record these coordinates in a logfile;
+4. Use pre-defined functions to execute the commands (draw).
+
+Guidelines
+- Comment your code:
+    > Function: PURPOSE, HOW IT WORKS, HOW IT RELATES TO OTHER FUNCTIONS
+
+Program Details
+- Your program should accept a COMMAND LINE PARAMETER: FILE NAME
+- It should read the contents of the FILE into a LINKED LIST
+- Commands are one per line; no length indicator:
+    > ROTATE @; @ = real-value angle
+    > MOVE d; d = real-value distance
+    > DRAW d; 
+    > FG i; i = integer-value colour code
+    > BG i;
+    > PATTERN c; c = non-space character (i.e. #, /, ., or something)
+- file input casing could be SCRAMBLED
+
+Error Handling includes:
+- File not existing; file empty;
+- lines that don't start with one of the specified commands;
+- Incorrect number of parameters after command;
+- incorrect data type after command;
+
+==========
+
+POSITION track cursor position: (x,y), where x is 0 left and y is 0 top.
+- so (0,0) is the top left corner.
+- Moving to the right is 0 degrees; up is 90 degrees, to a total of 360.
+    - So ROTATE adds and subtracts from the current angle.
+
+CURRENT COLOUR Start with TWO COLOUR CODES for FG and BG
+FG: 16 colours, 0-15.
+BG: 8 colours, 0-7. 
+- These are used whenever a character is displayed.
+
+CURRENT PATTERN character used to make any lines plotted.
+Initial pattern (character) is the '+' character.
+
+- Your program must keep track of all of this information.
+
+DRAW
+The draw command draw a line d units long, from current position at angle.
+- After the line is drawn, the current position moves to end of the line.
+- There is a function in effects.c called line() - USE THIS
+    - This function positions the cursor at the point, then calls plotter()
+    - We have to define plotter() and supply it to line (function pointer)
+    - Also takes a void* pointer, for us to pass any required data.
+
+MOVE
+Works similar to DRAW, but doesn't actually draw the line.
+
+For both of these commands, requires calculation of (x,y) coords using
+math.h library and basic trig: x = dcos@; y = dsin@
+
+effects.c may also contain (I think)
+- setFgColour(int); setBgColour(int);
+- clearScreen(); penDown();
+
+LOGFILE graphics.log - Program must APPEND to this file. So >> not >
+- First line to append should be '---' to separate old from new.
+- This file should show the (x,y) coords for drawing
+    - Format: (x1,y1)-(x2,y2) lining up vertically. Pretty!
+
+Example line: MOVE (  0.000, 0.000)-( 50.000, 33.333)
+
+MAKEFILE - Requires 3 compilation types:
+- TurtleGraphics
+- TurtleGraphicsSimple - Should create a B/W version of the art;
+    i.e. all FG/BG commands should be ignored (ifdef)
+- TurtleGraphicsDebug - Should print logfile entries AND art to terminal.
+    Logfile entries should be 'interspersed' with turtlegraphics (?)
+
+
+REPORT
+1. Describe purpose of each function in a paragraph (each function has a 
+    paragraph, or a paragraph in total?)
+2. Describe how you converted the input file to coordinate system
+    2/3 paragraphs
+3. Describe an ALTERNATIVE APPROACH to above conversion - 1/2 paragraphs
+4. Demonstrate it works by providing SAMPLE INPUT AND OUTPUT:
+    - Command line used;
+    - user input provided by terminal;
+    - contents of input file;
+    - output as shown on screen and written to ouput file.
+Professional presentation lol
+
+
