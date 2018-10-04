@@ -1,0 +1,58 @@
+To Do List
+idea: a tracker struct containing all the relevant pointers - I can then pass
+      around a pointer to this struct, rather than all the pointers individually
+1) Define tracker struct in main, containing:
+    - double* currX -> current position on the x-axis.
+    - double* currY -> current position on the y-axis.
+    - double* currAngle -> current angle.
+    - int* currFG -> current foreground colour.
+    - int* currBG -> current background colour.
+    - char* currPattern -> current pattern for drawing.
+
+**** DONE ****
+====== OBSOLETE
+2)  Instead of a commands struct, we can have just the Tracker struct. Each line 
+    has a command - We will parse (fscanf) the first word of each line, and this then
+    determines which pointer we need to manipulate. After parsing the word, we use
+    the value to EITHER update the tracker pointer, initiate a DRAW command OR if 
+    it is a MOVE command, use a combination of the currX and currY pointers to 
+    call the function that lets us move, and then update those accordingly.
+
+==== UPDATE ====
+2) Scratch that - I took a linked list, read in each line with fgets(), and then
+   passed this char* as whole into the void* data of the linkedlist node.
+   From here, I need to iterate through the linked list, probably use sscanf or
+   something to extract the values, and call functions like craz to draw it.
+====
+
+3) Create File.c: 
+    Establish a linked list.
+    a) Read in a file, line by line.
+        - Accept command line parameter: name of the file.
+        - Error validation...
+    b) Should take each line and maybe use if/else statements to determine
+       what to do with each command.
+
+You've read in the file, all commands are stored in the linked list. Then...
+
+4) Define the 'plotter' function, which should generate the terminal output.
+    - called by function pointer from line() in effects.c
+
+5) Iterate through the list, referencing the struct within it and a pointer to 
+   the tracker struct, and execute each command one by one. 
+    - I guess a bunch of 'if' statements, and each line will trigger one of these
+      to execute the command, and each if block will have a relevant call to the
+      tracker pointer to update it.
+
+    a) If it's a MOVE command or DRAW command, need to APPEND to the logfile.
+
+- For the DRAW command, retrive currX and currY. Draw the line d units long, 
+  from the current X/Y coordinates and at the current angle:
+    - look up math.h class for basic trig.
+    - should be something like currX = d * math.cos( angle );
+                               currY = d * math.sin( angle ); or something.
+    - round values when drawing and printing to file.
+
+- NOTE ON COLOURS: Use the effects.c function setFG and BG (pass ptr).
+
+
