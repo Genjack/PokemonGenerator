@@ -30,75 +30,29 @@ void setDefault( Tracker* currState )
 
 void readList( LinkedList* list, Tracker* currState )
 {
-    /* strcmp; */
-    LinkedListNode* currNode;
-    char cmd[8]; /* array to hold command for each node */
-    char trash[8]; /* junk array to take the command time fscanf goes. */
-    double distance, angleChange;
-    int lineNum;
-    
-
-    /* Set the current node to the start of the list. */
-    currNode = list->head;
-    lineNum = list->count;
-
-    while( currNode != NULL )
+    CmdStruct* cmd;
+    while( list->count > 0 )
     {
-        /* Check the command */
-        sscanf( (char*)currNode->data, "%s", cmd );
-        toUpperCase( cmd ); /* Ensure in upper case */
-
-        if( strcmp( cmd, "FG" ) == 0 ) /* FOREGROUND CHANGE */
-        {
-            sscanf( (char*)currNode->data, "%s %d", trash, 
-                &currState->currFG );
-        }
-        else if( strcmp( cmd, "BG" ) == 0 ) /* BACKGROUND CHANGE */
-        {
-            sscanf( (char*)currNode->data, "%s %d", trash, 
-                &currState->currBG );
-    printf( "BG Colour: %d\n", currState->currBG );
-        }
-        else if( strcmp( cmd, "MOVE" ) == 0 ) /* MOVE COMMAND */
-        {
-            sscanf( (char*)currNode->data, "%s %lf", trash, &distance );
-    printf( "distance: %f\n", distance );
-            /* Do something with the distance and moving etc */
-            moveCursor( distance, currState );
-            printf( "cursor position: %f, %f\n", currState->currX,
-                currState->currY );
-        }
-        else if( strcmp( cmd, "PATTERN" ) == 0 ) /* PATTERN CHANGE */
-        {
-            sscanf( (char*)currNode->data, "%s %c", trash, 
-                &currState->currPattern );
-        }
-        else if( strcmp( cmd, "DRAW" ) == 0 ) /* DRAW COMMAND */
-        {
-            sscanf( (char*)currNode->data, "%s %lf", trash, &distance );
-            /* Do something with drawing */
-        }
-        else if( strcmp( cmd, "ROTATE" ) == 0 ) /* ROTATE CURSOR */
-        {
-            sscanf( (char*)currNode->data, "%s %lf", trash, &angleChange );
-            /* Calculate new angle and store it in currState->currAngle */
-        }
-        else /* INVALID LINE */
-        {
-            printf( "Error: line %d is invalid.\n", lineNum );
-        }
-        lineNum++;
-        currNode = currNode->next;
+        /* Call the function contained within each node:
+        list node -> void* data (CmdStruct) -> command/value fields */
+        cmd = (CmdStruct*)(removeFirst( list ));
+        (*cmd->command)(cmd->value, currState);
+        free( cmd );
     }
 }
 
-void moveCursor( double distance, Tracker* currState )
+void moveCursor( char* inDistance, Tracker* currState )
 {
-    double angleInRadians;
-    angleInRadians = currState->currAngle / (PI/180);
+    double angleInRadians, distance;
+    /* Usage of atof VALIDATED because I have already VALIDATED (file.c) */
+    distance = atof( inDistance );
+
+    angleInRadians = currState->currAngle / (PI/180.0);
 
     currState->currX += distance * cos( angleInRadians ); 
     currState->currY += distance * sin( angleInRadians );
 }
 
+void changeAngle( char* angleChange, Tracker* currState )
+{ 
     

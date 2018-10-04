@@ -1,0 +1,12 @@
+TO DO LIST
+
+Premise: A file is read in from command-line parameter. A linked list is
+    created, and if the file isn't null, the list and file pointer are passed
+    to a function which parses the file line by line. Command structs are 
+    malloced with a function pointer and void pointer, and each string from 
+    each line is assigned to the relevant pointer, until the file is complete
+    (or if invalid). From there, each list item is removed one by one, and the
+    contents are used to complete their purpose before the node is freed.
+    After the list is depleted, the program ends.
+
+

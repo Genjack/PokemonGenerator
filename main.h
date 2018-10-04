@@ -17,7 +17,12 @@
 #include "file.h"
 #include "linked_list.h"
 
+/* DEFINE: my function pointer for move/draw/change angle */
+typedef void (*CmdFunc)(char*, Tracker*); /*type name is 'CmdFunc' */
+/* Declaration example: CmdFunc command = &function; */
 
+/* Don't think I need these anymore - I think I can just define one function
+   pointer type and then use that for everything..? */
 typedef void( *pFuncPtr )( void* data ); /* Print function pointer */
 typedef void( *fFuncPtr )( void* data ); /* Free function pointer */
 
@@ -42,6 +47,21 @@ typedef struct
     int currBG; /* Range: 0-7 */
     char currPattern; /* Default: '+' */
 } Tracker;
+
+/**
+*  STRUCT: Command
+*  PURPOSE: Takes two fields - command (function pointer) and value (void
+*   pointer). 'command' will be defined as a function that returns void and 
+*   takes a void*. The void* pointer will be cast according to the line from 
+*   file that we read.
+*  HOW IT WORKS: 
+*  HOW IT RELATES: 
+**/
+typedef struct
+{
+    CmdFunc command;            /* Function pointer */
+    char value[VAL_STR_LEN];    /* imported values from file */
+} CmdStruct;
 
 #include "utility.h" /* Included below Tracker declaration to avoid errors */
 #include "effects.h"

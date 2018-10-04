@@ -54,5 +54,3 @@ You've read in the file, all commands are stored in the linked list. Then...
     - round values when drawing and printing to file.
 
 - NOTE ON COLOURS: Use the effects.c function setFG and BG (pass ptr).
-
-

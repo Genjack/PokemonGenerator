@@ -22,7 +22,7 @@ int main( int argc, char* argv[] )
     
     FILE* flPtr;
     LinkedList* list;
-    Tracker* currState; /* pointer to Tracker struct for current state */
+    Tracker* currState; /* pointer to Tracker struct for current state */    
 
     if( argc != 2 )
     {
@@ -30,9 +30,6 @@ int main( int argc, char* argv[] )
     }
     else
     {
-        /* Create new empty linked list. 
-           Function LOCATION: linked_list.c; DECLARED: linked_list.h*/
-        list = createList();
         flPtr = fopen( argv[1], "r" );
         
         if( flPtr == NULL )
@@ -41,11 +38,17 @@ int main( int argc, char* argv[] )
         }
         else
         {
-            /* Read file into linked list.
-               Function LOCATION: file.c; DECLARED: file.h */
-            readInFile( flPtr, list );
-            /* Nodes are full - each node data void* contains a char* string. */
+            /* Create new empty linked list. 
+            Function LOCATION: linked_list.c; DECLARED: linked_list.h*/
+            list = createList();
 
+            /* Read file into linked list.
+            Function LOCATION: file.c; DECLARED: file.h */
+            if( readInFile( flPtr, list ) == 0)
+            {
+                
+            }
+            
             /* Malloc a Tracker struct, to begin keeping track of position */
             currState = (Tracker*)malloc(sizeof(Tracker));
 
@@ -56,8 +59,10 @@ int main( int argc, char* argv[] )
             /* Read the linked list node-by-node and initiate commands.
                Function LOCATION: utility.c; DECLARED: utility.h */
             readList( list, currState );
+        
+
+            fclose( flPtr );
         }
-        fclose( flPtr );
     }
     return 0;
 }
