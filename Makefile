@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Wall -pedantic -ansi -Werror
 
 $(EXEC) : $(OBJ)
-	$(CC) $(OBJ) -o $(EXEC)
+	$(CC) $(OBJ) -o $(EXEC) -lm
 
 main.o : main.c main.h
 	$(CC) -c main.c $(CFLAGS)

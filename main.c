@@ -10,7 +10,8 @@
     > main( int, char* );
 
    stdio.h, stdlib.h, string.h and other required declarations are here.
-   Note: Tracker struct is declared in 'main.h'. */
+   Note: Tracker struct is declared in 'main.h';
+         All function descriptions are located in header files. */
 
 #include "main.h"
 
@@ -51,7 +52,10 @@ int main( int argc, char* argv[] )
             /* Set the state to default values
                Function LOCATION: utility.c; DECLARED: utility.h */
             setDefault( currState );
-            printf( "%f\n", currState->currX );
+
+            /* Read the linked list node-by-node and initiate commands.
+               Function LOCATION: utility.c; DECLARED: utility.h */
+            readList( list, currState );
         }
         fclose( flPtr );
     }

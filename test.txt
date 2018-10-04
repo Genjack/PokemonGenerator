@@ -1,0 +1,4 @@
+FG 2
+MOVE 10
+BG 4
+MOVE 10

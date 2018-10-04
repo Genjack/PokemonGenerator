@@ -10,9 +10,37 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include <math.h>
 #include "main.h"
 #include "effects.h"
 
+#define PI 3.14159265358979323846
+
+/**
+* FUNCTION setDefault
+* PURPOSE:
+*   TO DO
+* HOW IT WORKS:
+*   TO DO
+**/
 void setDefault( Tracker* );
+
+/**
+* FUNCTION readList
+* PURPOSE:
+*   TO DO
+* HOW IT WORKS:
+*   TO DO
+**/  
+void readList( LinkedList*, Tracker* );
+
+/**
+* FUNCTION moveCursor
+* PURPOSE:
+*   TO DO
+* HOW IT WORKS:
+*   TO DO
+**/  
+void moveCursor( double, Tracker* );
 
 #endif
