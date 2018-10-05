@@ -17,13 +17,13 @@
 #define PI 3.14159265358979323846
 
 /**
-* FUNCTION setDefault
+* FUNCTION createTracker
 * PURPOSE:
 *   TO DO
 * HOW IT WORKS:
 *   TO DO
 **/
-void setDefault( Tracker* );
+Tracker* createTracker();
 
 /**
 * FUNCTION readList

@@ -9,18 +9,18 @@
 
     > main( int, char* );
 
-   stdio.h, stdlib.h, string.h and other required declarations are here.
    Note: Tracker struct is declared in 'main.h';
-         All function descriptions are located in header files. */
+         All function descriptions are located in header files, including for
+         main(). */
 
 #include "main.h"
 
 int main( int argc, char* argv[] )
 {
     /* argv[0] - Program Executable ("turtleGraphics");
-       argv[1] - Name of file to read from. */
+       argv[1] - Name of file to read from, i.e. charizard.txt. */
     
-    FILE* flPtr;
+    FILE* flPtr; /* Pointer to file being read from */
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
 
@@ -33,34 +33,31 @@ int main( int argc, char* argv[] )
         flPtr = fopen( argv[1], "r" );
         
         if( flPtr == NULL )
-        {
+        {   
             perror( "Error: Could not open file.\n" );
         }
         else
         {
             /* Create new empty linked list. 
-            Function LOCATION: linked_list.c; DECLARED: linked_list.h*/
+            Function declaration/description: linked_list.h */
             list = createList();
 
             /* Read file into linked list.
-            Function LOCATION: file.c; DECLARED: file.h */
-            if( readInFile( flPtr, list ) == 0)
+            Function dec/desc: file.h */
+            if( readInFile( flPtr, list ) != 0) /* success; 0 == FAIL */
             {
-                
+                /* Create a Tracker struct, to keep track of position 
+                Function dec/desc: utility.h */
+                currState = createTracker();
+
+                /* Read the linked list node-by-node and initiate commands.
+                Function dec/desc: utility.h */
+                readList( list, currState );
             }
-            
-            /* Malloc a Tracker struct, to begin keeping track of position */
-            currState = (Tracker*)malloc(sizeof(Tracker));
-
-            /* Set the state to default values
-               Function LOCATION: utility.c; DECLARED: utility.h */
-            setDefault( currState );
-
-            /* Read the linked list node-by-node and initiate commands.
-               Function LOCATION: utility.c; DECLARED: utility.h */
-            readList( list, currState );
-        
-
+            else
+            {
+                printf( "Error: Invalid file. Exiting.\n" );
+            }
             fclose( flPtr );
         }
     }

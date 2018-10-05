@@ -18,13 +18,19 @@
 
 #define CMD_STR_LEN 8 /* PATTERN = 7 + 1('\0') = longest valid string */
 #define VAL_STR_LEN 4 /* Allows for 3 digits plus null term (i.e. 360) */
+
 #define FALSE 0
 #define TRUE !FALSE
+
 #define VALID TRUE
 #define NOT_VALID FALSE
 
 /* FUNCTION DECLARATIONS */
-void readInFile( FILE*, LinkedList* );
+int readInFile( FILE*, LinkedList* );
 void toUpperCase( char* );
+int validateInt( char*, int, int );
+int validateReal( char* );
+int validateChar( char* );
+
 
 #endif
