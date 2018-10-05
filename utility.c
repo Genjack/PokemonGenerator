@@ -37,6 +37,8 @@ Tracker* createTracker()
 void readList( LinkedList* list, Tracker* currState )
 {
     CmdStruct* cmd;
+
+    clearScreen();
     while( list->count > 0 )
     {
         /* Call the function contained within each node:
@@ -45,6 +47,7 @@ void readList( LinkedList* list, Tracker* currState )
         (*cmd->command)(cmd->value, currState);
         free( cmd );
     }
+    penDown();
 }
 
 void moveCursor( char* inDistance, Tracker* currState )
@@ -52,18 +55,20 @@ void moveCursor( char* inDistance, Tracker* currState )
     double angleInRadians, distance;
     /* Usage of atof VALIDATED because I have already VALIDATED (file.c) */
     distance = atof( inDistance );
-
-    angleInRadians = currState->currAngle / (PI/180.0);
+    
+    angleInRadians = ( currState->currAngle * PI ) / 180.0;
 
     currState->currX += distance * cos( angleInRadians ); 
-    currState->currY += distance * sin( angleInRadians );
+    /* And subtract from y to get it to go down? */
+    currState->currY -= distance * sin( angleInRadians );
 }
 
 void drawLine( char* inDistance, Tracker* currState )
 {
-    double x1, double y1; /* cast to ints when calling line() */
+    double x1, y1, x2, y2; /* cast to ints when calling line() */
+
     x1 = currState->currX;
-    y1 = currState->currY;
+    y1 = currState->currY; /* original position is set to x/y1. */
 
     moveCursor( inDistance, currState ); /* cursor is now at x2, y2 */
 
@@ -76,29 +81,31 @@ void drawLine( char* inDistance, Tracker* currState )
     y2 = currState->currY + 0.5;
     y2 = floor( y2 );
 
-    line( x1, y1, x2, y2, &plotPoint, currState );
+    line( (int)x1, (int)y1, (int)x2, (int)y2, &plotPoint, (void*)currState );
 }
 
-void plotPoint( Tracker* currState )
+void plotPoint( void* currState )
 {
-    printf( "%c", currState->currPattern );
+    Tracker* current;
+    current = (Tracker*)currState;
+    printf( "%c", current->currPattern );
 }
 
 void changeAngle( char* angleChange, Tracker* currState )
 { 
     double rotation, temp;
-    rotatation = atof( angleChange ); 
+    rotation = atof( angleChange ); 
     
     temp = rotation + currState->currAngle;
-    while( temp > 360 )
+    while( temp > 360.0 )
     {
-        temp -= 360;
+        temp -= 360.0;
     }
-    if( temp < 0 )
+    if( temp < 0.0 )
     {
-        while( temp < 0 )
+        while( temp < 0.0 )
         {
-            temp += 180;
+            temp += 180.0;
         }
     }
     currState->currAngle = temp;
@@ -126,4 +133,9 @@ void setPattern( char* inPattern, Tracker* currState )
     currState->currPattern = inPattern[0];
 }
 
-
+void prntLog( FILE* log, double x1, double y1, Tracker* currState, char* cmd )
+{
+}    /* print to file - take in log pointer, print the command, then print x1
+       and y1, then the current x and y, nicely formatted */
+    
+     

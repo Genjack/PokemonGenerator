@@ -11,6 +11,7 @@
     > int validateInt( char* );
     > int validateReal( char* );
     > int validateChar( char* );
+    > printToLog( double, double, Tracker*, char* );
 */
 
 #include "file.h"
@@ -27,27 +28,27 @@
 *    Returns an integer representing a success code - if -1, it's failed, if 0
 *    it's all good.
 **/   
-int readInFile( FILE* flPtr, LinkedList* list )
+int readInFile( FILE* flPtr, LinkedList* list, int lineCount )
 {
     /* fscanf - check string - then fscanf with format based on string */
     char cmd[CMD_STR_LEN]; /* Malloced array of chars for the command */
     char val[VAL_STR_LEN]; /* Smaller array for the values */
-    int nRead;
+    int nRead, ii;
     int valid = VALID; /* 1 is !FALSE */
-    char fup;
+    /*char fup;*/
     CmdStruct* instruction; /* Struct to store in each linked list node */
-
-    do
+    
+    for( ii = 0; ii < lineCount; ii++ )
     {
         /* malloc new CmdStruct - declared in main.h */
         instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
         /* command (FP) and char[4] value */ 
 
-        /* Attempt to read and ensure that nothing comes after the two 
-           strings. This might not work - might have to use fgetc() */
-        nRead = fscanf( flPtr, "%s %s %c", cmd, val, &fup );
-        /* fgetc() check if '\n'. */
-        if( nRead != 2 ) /* i.e. if fup is not '\n' */
+        /* Read the first line, expecting two valid strings. */
+        nRead = fscanf( flPtr, "%s %s", cmd, val );
+        /*fgetc() check if '\n'.*/
+        /*fup = fgetc(flPtr);*/
+        if( ( nRead != 2 )/* || ( fup != '\n' )*/ )
         {
             valid = NOT_VALID; /* EOF - get outta town */
         }
@@ -110,7 +111,7 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 {
                     /* Call landing function to prepare calling of line
                        Located in utility.c */
-                    instruction->command = &Drawline;
+                    instruction->command = &drawLine;
                 }
             }
             else if( strcmp( cmd, "ROTATE" ) == 0 ) /* ROTATE ANGLE */
@@ -124,20 +125,43 @@ int readInFile( FILE* flPtr, LinkedList* list )
                     instruction->command = &changeAngle;
                 }
             }
-            /* Final check - if not finished, assign char* to the struct field
-               completing the struct, and add it to the back of the list. */
-            if( !done )
+            /* If not finished, assign char* to the struct field
+               completing the struct, and add to the back of the list. */
+            if( !feof(flPtr) )
+            /* if( !feof(flPtr) ) */
             {    
                 /* Populate struct and insert into list */
                 strncpy( instruction->value, val, VAL_STR_LEN );
-                /* Store the line in a new LinkedListNode and add to list*/
+                /* Store the line in new LinkedListNode and add to list*/
                 insertLast( list, instruction ); 
-           } 
+            } 
         }
     /* Terminate loop if file is invalid or end of file is reached. */
-    } while( valid && !feof(flPtr) );
+    }  /* END FOR LOOP */
     return valid;
 }
+
+int getNumLines( FILE* flPtr )
+{
+    int lineCount = 0;
+    char newLineSearch;
+    int done = FALSE;
+
+    do
+    {
+        newLineSearch = fgetc( flPtr );
+        if( newLineSearch == EOF )
+        {
+            done = TRUE;
+        }
+        else if( newLineSearch == '\n' )
+        {
+            lineCount++;
+        }
+    } while( !done );
+    return lineCount;
+}    
+    
 
 /** 
 * FUNCTION: toUpperCase
@@ -169,7 +193,7 @@ void toUpperCase( char* str )
 }
 
 /**
-*  FUNCTION: validateInt
+*  FUNCTION: validateColour
 *  PURPOSE: 
 *   To check that the imported char* can be successfully converted to an int.
 *  HOW IT WORKS:
@@ -177,42 +201,43 @@ void toUpperCase( char* str )
 *  HOW IT RELATES:
 *   TO DO
 **/
-int validateInt( char* val, int min, int max )
+int validateColour( char* val, int min, int max )
 {
-    int valCheck = 1;
+    int valCheck; /* int to store the line value in (not used yet) */
+    int success = 1; /* returns -1 if invalid, 1 if valid */
     char* endPtr;
     valCheck = strtol( val, &endPtr, 10 );
     if( ( valCheck < min ) || ( valCheck > max ) )
     {
-        valCheck = -1;
+        success = -1;
     }
     if( *endPtr != '\0' )
     {
-        valCheck = -1;
+        success = -1;
     }
-    return valCheck;
+    return success;
 }
 
 int validateReal( char* val )
 {
-    int valCheck = 1;
+    int success = 1;
     char* endPtr;
     
-    strtof( val, &endPtr );
+    strtod( val, &endPtr );
     if( *endPtr != '\0' )
     {
-        valCheck = -1;
+        success = -1;
     }
-    return ValCheck;
+    return success;
 } 
 
 int validateChar( char* val )
 {
-    int valCheck = 1;
+    int success = 1;
 
     if( strlen( val ) != 1 )
     {
-        valCheck = -1;
+        success = -1;
     }
-    return valCheck;
-}        
+    return success;
+}  

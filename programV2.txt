@@ -9,4 +9,8 @@ Premise: A file is read in from command-line parameter. A linked list is
     contents are used to complete their purpose before the node is freed.
     After the list is depleted, the program ends.
 
+LEFT TO DO
+1) Figure out why the picture doubles up - something to do with cursor
+2) Create a log file and a sensible way to append to it
+3) Compile report.
 

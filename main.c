@@ -20,9 +20,10 @@ int main( int argc, char* argv[] )
     /* argv[0] - Program Executable ("turtleGraphics");
        argv[1] - Name of file to read from, i.e. charizard.txt. */
     
-    FILE* flPtr; /* Pointer to file being read from */
+    FILE* flPtr, logPtr; /* Pointer to file being read from */
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
+    int numLines;
 
     if( argc != 2 )
     {
@@ -44,7 +45,9 @@ int main( int argc, char* argv[] )
 
             /* Read file into linked list.
             Function dec/desc: file.h */
-            if( readInFile( flPtr, list ) != 0) /* success; 0 == FAIL */
+            numLines = getNumLines( flPtr );
+            rewind( flPtr ); /* Reset the file Pointer */
+            if( readInFile( flPtr, list, numLines ) != 0) /* 0 == FAIL */
             {
                 /* Create a Tracker struct, to keep track of position 
                 Function dec/desc: utility.h */
@@ -63,4 +66,3 @@ int main( int argc, char* argv[] )
     }
     return 0;
 }
-
