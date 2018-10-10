@@ -20,7 +20,7 @@ int main( int argc, char* argv[] )
     /* argv[0] - Program Executable ("turtleGraphics");
        argv[1] - Name of file to read from, i.e. charizard.txt. */
     
-    FILE* flPtr, logPtr; /* Pointer to file being read from */
+    FILE* flPtr; /*logPtr; Pointer to file being read from */
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
     int numLines;
