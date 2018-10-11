@@ -76,10 +76,17 @@ void drawLine( char* inDistance, Tracker* currState )
     y1 = roundReal( y1 );
     x2 = roundReal( currState->currX );
     y2 = roundReal( currState->currY );
+    /* ... calls to line() should be preceded by relevant log file entries..."
+        - Abraham Lincoln, Gettysburg Address */
+    #ifdef DEBUG
+    printLog( x1, y1, currState, "DRAW" ); 
+    #endif
 
     line( (int)x1, (int)y1, (int)x2-1, (int)y2, &plotPoint, (void*)currState );
-    
+
+    #ifndef DEBUG    
     printLog( x1, y1, currState, "DRAW" ); 
+    #endif
 }
 
 void plotPoint( void* currState )
@@ -134,8 +141,6 @@ void setPattern( char* inPattern, Tracker* currState )
     /* Validation already completed */
     currState->currPattern = inPattern[0];
 }
-    /* print to file - take in log pointer, print the command, then print x1
-       and y1, then the current x and y, nicely formatted */
 
 double roundReal( double num )
 {

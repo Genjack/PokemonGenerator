@@ -4,7 +4,7 @@
    Tutors: Rayden and Elliot
 
    UCP ASSIGNMENT - FILE.C
-   Contents: This file contains the functions needed for file I/O:
+   Contents: This file contains the functions needed for file I/O.
 
     > int readInFile( FILE*, LinkedList* );
     > void toUpperCase( char* );
@@ -16,40 +16,26 @@
 */
 
 #include "file.h"
-#include "effects.h" /* For setFgColour(int) and setBgColour(int) */
-#include "utility.h" /* For moveCursor */
 
-/**
-* FUNCTION: readInFile
-* PURPOSE: 
-*    This is a key method that reads in the file and makes the necessary
-*    calls to storage and other methods so that the draw and move operations
-*    can be initiated.
-* HOW IT WORKS: 
-*    Returns an integer representing a success code - if -1, it's failed, if 0
-*    it's all good.
-**/   
+   
 int readInFile( FILE* flPtr, LinkedList* list, int lineCount )
 {
     /* fscanf - check string - then fscanf with format based on string */
-    char cmd[CMD_STR_LEN]; /* Malloced array of chars for the command */
+    char cmd[CMD_STR_LEN]; /* Array of chars for the command */
     char val[VAL_STR_LEN]; /* Smaller array for the values */
     int nRead, ii;
     int valid = VALID; /* 1 is !FALSE */
-    /*char fup;*/
     CmdStruct* instruction; /* Struct to store in each linked list node */
     
     for( ii = 0; ii < lineCount; ii++ )
     {
         /* malloc new CmdStruct - declared in main.h */
         instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-        /* command (FP) and char[4] value */ 
+        /* Struct contents: command (FP) and char[4] value */ 
 
         /* Read the first line, expecting two valid strings. */
         nRead = fscanf( flPtr, "%s %s", cmd, val );
-        /*fgetc() check if '\n'.*/
-        /*fup = fgetc(flPtr);*/
-        if( ( nRead != 2 )/* || ( fup != '\n' )*/ )
+        if( ( nRead != 2 ) ) 
         {
             valid = NOT_VALID; /* EOF - get outta town */
         }
@@ -129,7 +115,6 @@ int readInFile( FILE* flPtr, LinkedList* list, int lineCount )
             /* If not finished, assign char* to the struct field
                completing the struct, and add to the back of the list. */
             if( !feof(flPtr) )
-            /* if( !feof(flPtr) ) */
             {    
                 /* Populate struct and insert into list */
                 strncpy( instruction->value, val, VAL_STR_LEN );
@@ -193,15 +178,7 @@ void toUpperCase( char* str )
     }
 }
 
-/**
-*  FUNCTION: validateColour
-*  PURPOSE: 
-*   To check that the imported char* can be successfully converted to an int.
-*  HOW IT WORKS:
-*   TO DO
-*  HOW IT RELATES:
-*   TO DO
-**/
+
 int validateColour( char* val, int min, int max )
 {
     int valCheck; /* int to store the line value in (not used yet) */
@@ -246,6 +223,13 @@ int validateChar( char* val )
 void printLog( double x1, double y1, Tracker* currState, char* cmd )
 {
     FILE* logPtr;
+    #ifdef DEBUG
+    FILE* termPtr; /* additional optional file pointer for standard in */
+    termPtr = stdout;
+    fprintf( termPtr, "%s ( %6.3f, %6.3f ) - ( %6.3f, %6.3f )\n", cmd, x1, y1,
+        (double)currState->currX, (double)currState->currY );
+/*    fclose( termPtr ); */
+    #endif
 
     logPtr = fopen( "graphics.log", "a" );
 

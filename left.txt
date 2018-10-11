@@ -7,7 +7,7 @@ TO DO LIST
 - Move calculate distance stuff to a separate function, to get around the
   need to call moveCursor from drawLine (and stop printing logfile twice). DONE
 
-- Conditional compilation for debugging and B/W mode.
+- Conditional compilation for debugging and B/W mode. DONE
     - Create multiple file types like main2, utility2 etc.
 
 - Put all function descriptions in their appropriate header files. 

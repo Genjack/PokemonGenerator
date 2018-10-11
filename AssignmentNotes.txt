@@ -93,4 +93,9 @@ REPORT
     - output as shown on screen and written to ouput file.
 Professional presentation lol
 
+POST-CODING NOTES
+****** FILE.C ********
+- int counter for readFile() - used because I had some issues with feof(), namely
+  that when used in tandem with fscanf, tended to loop back around to check 
+  the value of fscanf, which messed things up.
 

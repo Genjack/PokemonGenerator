@@ -11,7 +11,8 @@
 
    Note: Tracker struct is declared in 'main.h';
          All function descriptions are located in header files, including for
-         main(). */
+         main(). 
+*/
 
 #include "main.h"
 
@@ -59,13 +60,13 @@ int main( int argc, char* argv[] )
                 /* Read the linked list node-by-node and initiate commands.
                 Function dec/desc: utility.h */
                 readList( list, currState );
+                free( currState );
             }
             else
             {
                 printf( "Error: Invalid file. Exiting.\n" );
             }
             fclose( flPtr );
-            free( currState );
             free( list );
         }
     }
