@@ -83,7 +83,6 @@ void insertLast( LinkedList* list, void* contents )
         list->tail = newNode;
     }
     list->count += 1;
-    
 }
 
 /*DOUBLE-LINK DOUBLE-END*/
@@ -102,10 +101,12 @@ void* removeFirst( LinkedList* listPtr ) /*Returns a void pointer.*/
             listPtr->head->prev = NULL; /*New first node prev set to null */
             rescuedData = currNode->data;
             free( currNode );
+            currNode = NULL;
         }
         else /* Removing the only node in the list */
         {
             rescuedData = listPtr->head->data;
+            free( listPtr->head );
             listPtr->head = NULL;
             listPtr->tail = NULL;
         }
@@ -124,6 +125,7 @@ void* removeLast( LinkedList* listPtr ) /* DOUBLE-DOUBLE */
         if( listPtr->tail->prev == NULL ) /* Only one node */
         {
             rescuedData = listPtr->head->data;
+            free( listPtr->head );
             listPtr->head = NULL;
             listPtr->tail = NULL;
         }
@@ -131,6 +133,7 @@ void* removeLast( LinkedList* listPtr ) /* DOUBLE-DOUBLE */
         {
             rescuedData = listPtr->tail->data;
             listPtr->tail = listPtr->tail->prev;
+            free( listPtr->tail->next );
             listPtr->tail->next = NULL;
         }
         listPtr->count -= 1;

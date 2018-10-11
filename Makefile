@@ -1,7 +1,7 @@
 OBJ = main.o linked_list.o file.o utility.o effects.o
 EXEC = TurtleGraphics
 CC = gcc
-CFLAGS = -Wall -pedantic -ansi -Werror
+CFLAGS = -Wall -pedantic -ansi -Werror -g
 
 $(EXEC) : $(OBJ)
 	$(CC) $(OBJ) -o $(EXEC) -lm
@@ -12,7 +12,7 @@ main.o : main.c main.h
 linked_list.o : linked_list.c linked_list.h
 	$(CC) -c linked_list.c $(CFLAGS)
 
-file.o : file.c file.h
+file.o : file.c file.h 
 	$(CC) -c file.c $(CFLAGS)
 
 utility.o : utility.c utility.h 
@@ -21,6 +21,9 @@ utility.o : utility.c utility.h
 effects.o : effects.c effects.h
 	$(CC) -c effects.c $(CFLAGS)
 
+mainSimple.o : main.c main.h
+	$(CC) -c main.c $(CFLAGS)
+
 clean:
 	rm -f $(EXEC) $(OBJ)
-
+	rm graphics.log

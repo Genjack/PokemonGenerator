@@ -97,4 +97,6 @@ void setBG( char*, Tracker* );
 **/  
 void setPattern( char*, Tracker* );
 
+void calcMovement( char*, Tracker* );
+double roundReal( double );
 #endif

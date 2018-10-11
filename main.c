@@ -24,7 +24,6 @@ int main( int argc, char* argv[] )
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
     int numLines;
-
     if( argc != 2 )
     {
         printf( "Error: Filename required as extra command-line parameter.\n" );
@@ -47,6 +46,10 @@ int main( int argc, char* argv[] )
             Function dec/desc: file.h */
             numLines = getNumLines( flPtr );
             rewind( flPtr ); /* Reset the file Pointer */
+            
+            /* Print dashes to denote beginning of log file instance */            
+            printDashes();
+
             if( readInFile( flPtr, list, numLines ) != 0) /* 0 == FAIL */
             {
                 /* Create a Tracker struct, to keep track of position 
@@ -62,7 +65,17 @@ int main( int argc, char* argv[] )
                 printf( "Error: Invalid file. Exiting.\n" );
             }
             fclose( flPtr );
+            free( currState );
+            free( list );
         }
     }
     return 0;
+}
+
+void printDashes()
+{
+    FILE* logPtr = fopen( "graphics.log", "a" );
+    
+    fprintf( logPtr, "---\n" );
+    fclose( logPtr );
 }

@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "file.h"
 #include "linked_list.h"
 
 #define VAL_STR_LEN 4 /* Allows for 3 digits plus null term (i.e. 360) */
@@ -67,5 +66,9 @@ typedef struct
 
 #include "utility.h" /* Included below Tracker declaration to avoid errors */
 #include "effects.h"
+#include "file.h"
+
+/* DEFINE PRINTDASH() FUNCTION */
+void printDashes();
 
 #endif

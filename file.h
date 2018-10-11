@@ -13,8 +13,8 @@
 #ifndef FILE_H
 #define FILE_H
 
-#include "main.h"
 #include "linked_list.h"
+#include "main.h"
 
 #define CMD_STR_LEN 8 /* PATTERN = 7 + 1('\0') = longest valid string */
 
@@ -31,6 +31,6 @@ void toUpperCase( char* );
 int validateColour( char*, int, int );
 int validateReal( char* );
 int validateChar( char* );
-
+void printLog( double, double, Tracker*, char* );
 
 #endif

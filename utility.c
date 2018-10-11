@@ -52,15 +52,15 @@ void readList( LinkedList* list, Tracker* currState )
 
 void moveCursor( char* inDistance, Tracker* currState )
 {
-    double angleInRadians, distance;
+    double x1, y1;
     /* Usage of atof VALIDATED because I have already VALIDATED (file.c) */
-    distance = atof( inDistance );
-    
-    angleInRadians = ( currState->currAngle * PI ) / 180.0;
 
-    currState->currX += distance * cos( angleInRadians ); 
-    /* And subtract from y to get it to go down? */
-    currState->currY -= distance * sin( angleInRadians );
+    x1 = currState->currX;
+    y1 = currState->currY;
+
+    calcMovement( inDistance, currState );
+
+    printLog( x1, y1, currState, "MOVE" );
 }
 
 void drawLine( char* inDistance, Tracker* currState )
@@ -70,18 +70,16 @@ void drawLine( char* inDistance, Tracker* currState )
     x1 = currState->currX;
     y1 = currState->currY; /* original position is set to x/y1. */
 
-    moveCursor( inDistance, currState ); /* cursor is now at x2, y2 */
+    calcMovement( inDistance, currState );
 
-    x1 += 0.5;
-    x1 = floor( x1 ); /* becomes int-friendly */
-    y1 += 0.5;
-    y1 = floor( y1 );
-    x2 = currState->currX + 0.5;
-    x2 = floor( x2 );
-    y2 = currState->currY + 0.5;
-    y2 = floor( y2 );
+    x1 = roundReal( x1 );
+    y1 = roundReal( y1 );
+    x2 = roundReal( currState->currX );
+    y2 = roundReal( currState->currY );
 
-    line( (int)x1, (int)y1, (int)x2, (int)y2, &plotPoint, (void*)currState );
+    line( (int)x1, (int)y1, (int)x2-1, (int)y2, &plotPoint, (void*)currState );
+    
+    printLog( x1, y1, currState, "DRAW" ); 
 }
 
 void plotPoint( void* currState )
@@ -105,7 +103,7 @@ void changeAngle( char* angleChange, Tracker* currState )
     {
         while( temp < 0.0 )
         {
-            temp += 180.0;
+            temp += 360.0;
         }
     }
     currState->currAngle = temp;
@@ -116,7 +114,9 @@ void setFG( char* inColour, Tracker* currState )
     /* Validation completed in file.c */
     currState->currFG = atoi( inColour ); /* Struct colour updated */
     /* Call function in effects.h to actually effect the change */
+    #ifndef SIMPLE
     setFgColour( currState->currFG );
+    #endif
 }
 
 void setBG( char* inColour, Tracker* currState )
@@ -124,7 +124,9 @@ void setBG( char* inColour, Tracker* currState )
     /* Validation completed in file.c */
     currState->currBG = atoi( inColour ); /* Struct colour updated */
     /* Call function in effects.h to actually effect the change */
+    #ifndef SIMPLE
     setBgColour( currState->currBG );
+    #endif
 }
     
 void setPattern( char* inPattern, Tracker* currState )
@@ -132,10 +134,34 @@ void setPattern( char* inPattern, Tracker* currState )
     /* Validation already completed */
     currState->currPattern = inPattern[0];
 }
-
-void prntLog( FILE* log, double x1, double y1, Tracker* currState, char* cmd )
-{
-}    /* print to file - take in log pointer, print the command, then print x1
+    /* print to file - take in log pointer, print the command, then print x1
        and y1, then the current x and y, nicely formatted */
+
+double roundReal( double num )
+{
+    double rounded;
     
+    if( num >= 0.0 ) /* Unlikely to be exactly 0 without tolerance, but wahey */
+    {
+        rounded = num + 0.5;
+        rounded = floor( rounded );
+    }
+    else /* num < 0; should round up basically */
+    {
+        rounded = num - 0.5;
+        rounded = ceil( rounded );
+    }
+    return rounded;
+}
+
+void calcMovement( char* inDistance, Tracker* currState )
+{
+    double angleInRadians, distance;
+
+    distance = atof( inDistance );
+    
+    angleInRadians = ( currState->currAngle * PI ) / 180.0;
      
+    currState->currX += distance * cos( angleInRadians );
+    currState->currY -= distance * sin( angleInRadians );
+}

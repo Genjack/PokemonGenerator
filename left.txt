@@ -1,0 +1,13 @@
+TO DO LIST
+
+- Create a system to write to a logfile. DONE
+- Fix double printing issue. DONE
+- Fix memory leaks DONE
+- Change floor stuff to function. DONE
+- Move calculate distance stuff to a separate function, to get around the
+  need to call moveCursor from drawLine (and stop printing logfile twice). DONE
+
+- Conditional compilation for debugging and B/W mode.
+    - Create multiple file types like main2, utility2 etc.
+
+- Put all function descriptions in their appropriate header files. 

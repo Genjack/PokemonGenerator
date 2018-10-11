@@ -12,6 +12,7 @@
     > int validateReal( char* );
     > int validateChar( char* );
     > printToLog( double, double, Tracker*, char* );
+
 */
 
 #include "file.h"
@@ -154,7 +155,7 @@ int getNumLines( FILE* flPtr )
         {
             done = TRUE;
         }
-        else if( newLineSearch == '\n' )
+        else if( newLineSearch == '\n' ) /*empty line causes dump*/
         {
             lineCount++;
         }
@@ -240,4 +241,15 @@ int validateChar( char* val )
         success = -1;
     }
     return success;
-}  
+}
+
+void printLog( double x1, double y1, Tracker* currState, char* cmd )
+{
+    FILE* logPtr;
+
+    logPtr = fopen( "graphics.log", "a" );
+
+    fprintf( logPtr, "%s ( %6.3f, %6.3f ) - ( %6.3f, %6.3f )\n", cmd, x1, y1,
+        (double)currState->currX, (double)currState->currY );
+    fclose( logPtr );
+}
