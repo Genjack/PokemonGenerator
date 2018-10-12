@@ -132,11 +132,15 @@ int validateChar( char* );
 *    To print out the command to either a log file or terminal in a highly
 *    formatted manner.
 *  HOW IT WORKS:
-*       
+*    printLog() is called from within either the moveCursor() or drawLine() 
+*    functions, and uses the coordinates given to chart the movements of the
+*    cursor. If DEBUG is not defined, the results are only printed to a
+*    logfile, which is created once and then appended to each time. If DEBUG
+*    is defined, it also prints the results to terminal.  
 *  HOW IT RELATES:
-*    Another brick in the wall of validation. Essentially, the length of the
-*    char* is all that matters here, because any char can be used if it's a 
-*    printable character.
+*    This function allows the user to view their coordinate movements each
+*    time a move or draw command is given, and helps to give a better sense of
+*    what the program is doing at each step.    
 **/
 void printLog( double, double, Tracker*, char* );
 

@@ -10,4 +10,11 @@ TO DO LIST
 - Conditional compilation for debugging and B/W mode. DONE
     - Create multiple file types like main2, utility2 etc.
 
-- Put all function descriptions in their appropriate header files. 
+FUNCTION DESCRIPTIONS 
+- file.c/file.h DONE
+- AssignmentNotes.txt DONE
+- effects.c/effects.h DONE
+- linked_list.c/h DONE
+- main.c/h DONE
+- utility.c/h DONE
+

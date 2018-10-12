@@ -8,6 +8,7 @@
    TurtleGraphics program. It contains the following methods:    
 
     > main( int, char* );
+    > printDashes();
 
    Note: Tracker struct is declared in 'main.h';
          All function descriptions are located in header files, including for

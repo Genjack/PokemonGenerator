@@ -6,7 +6,16 @@
    UCP ASSIGNMENT - UTILITY.C
    Contents: This file contains any methods needed to facilitate the drawing of
       the object that I have written myself (so excluding effects.c methods):
-    > setDefault( Tracker* currState );
+    > createTracker();
+    > readList( LinkedList*, Tracker* );
+    > moveCursor( char*, Tracker* );
+    > drawLine( char*, Tracker* );
+    > plotPoint( void* );
+    > changeAngle( char*, Tracker* );
+    > setFG( char*, Tracker* );
+    > setBG( char*, Tracker* );
+    > roundReal( double );
+    > calcMovement( char*, Tracker* );
 */
 
 #include "utility.h"
@@ -76,8 +85,7 @@ void drawLine( char* inDistance, Tracker* currState )
     y1 = roundReal( y1 );
     x2 = roundReal( currState->currX );
     y2 = roundReal( currState->currY );
-    /* ... calls to line() should be preceded by relevant log file entries..."
-        - Abraham Lincoln, Gettysburg Address */
+    /* ... calls to line() to be preceded by relevant log file entries..."*/
     #ifdef DEBUG
     printLog( x1, y1, currState, "DRAW" ); 
     #endif

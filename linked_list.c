@@ -1,17 +1,12 @@
 /* Name: Tim J. Dempsey
    Student ID: 19390664
    Unit and Time: UCP, Tuesdays @ 4pm
-   Contents: linked_list.c - Program for printing out journal entries from file.
-*/
+   Contents: Stripped version of my Linked List, for the assignment.
 
-/**
-* Notes: Create capability to:
-* > Create empty linked list;
-* > Insert an element at the start;
-* > Remove an element from the start;
-* > Retrieve ith element from the list;
-* > Print out contents of the list;
-* > Free the list.
+* Notes: Contains following functions:
+* > createList()
+* > insertLast()
+* > removeFirst()
 **/
 
 #include <stdio.h>
@@ -25,38 +20,6 @@ LinkedList* createList() /* DOUBLE-DOUBLE */
     list->tail = NULL;
     list->count = 0;
     return list;
-}
-
-/*FUNCTION: Insert a node at the start of the linked list.*/
-void insertFirst( LinkedList* list, void* contents ) /* DOUBLE-DOUBLE */
-{
-    LinkedListNode* newNode;
-
-    /* Create the new node */
-    newNode = (LinkedListNode*)malloc(sizeof(LinkedListNode));
-    
-    /* Assign the imported data to the newly created node */
-    newNode->data = contents;
-    /* Set the new node's prev to NULL (it's first) */
-    newNode->prev = NULL;
-    
-    if( list->head == NULL )
-    {
-        list->head = newNode;
-        list->tail = newNode; /*First element; is both front and back.*/
-        newNode->next = NULL;
-    }
-    else    
-    {
-        list->head->prev = newNode; /* Former first node prev field set to new*/
-        /* Point the newNode 'next' field at the first node */
-        newNode->next = list->head; 
-
-        /* Point the head at the new node */
-        list->head = newNode;
-
-    }
-    list->count += 1; /* Update count to reflect node addition */
 }
 
 /*FUNCTION: Insert a node last in the list; DOUBLE-ENDED DOUBLE-LINKED */
@@ -114,81 +77,3 @@ void* removeFirst( LinkedList* listPtr ) /*Returns a void pointer.*/
     }
     return rescuedData;
 }
-
-/*REMOVE LAST */
-void* removeLast( LinkedList* listPtr ) /* DOUBLE-DOUBLE */
-{
-    void* rescuedData = NULL;
-
-    if( listPtr->tail != NULL )
-    {
-        if( listPtr->tail->prev == NULL ) /* Only one node */
-        {
-            rescuedData = listPtr->head->data;
-            free( listPtr->head );
-            listPtr->head = NULL;
-            listPtr->tail = NULL;
-        }
-        else /* Multiple nodes */
-        {
-            rescuedData = listPtr->tail->data;
-            listPtr->tail = listPtr->tail->prev;
-            free( listPtr->tail->next );
-            listPtr->tail->next = NULL;
-        }
-        listPtr->count -= 1;
-    }
-    return rescuedData;
-}
-
-/*FUNCTION: Retrieve the ith element of the list without modifying.*/
-void* returnElement( LinkedList* listPtr, int index )
-{
-    int ii = 0;
-    LinkedListNode* currNode;
-    void* rescuedData;
-
-    if( ( index > listPtr->count) || ( index < 0 ) )
-    {
-        rescuedData = NULL;
-    }
-    else
-    {
-        currNode = listPtr->head;
-        while( ii < index ) 
-        {
-            currNode = currNode->next;
-        }
-        rescuedData = currNode->data;
-    }
-    return rescuedData;
-}
-
-void printList( LinkedList* listPtr, void(*funcPtr)(void*) )
-{
-    LinkedListNode* currNode = listPtr->head;
-     
-    while(currNode != NULL)
-    {
-        (*funcPtr)(currNode->data);
-        currNode = currNode->next;
-    }
-}
-
-/* FUNCTION: Free the list. Works similarly to printList, in that we need a 
-   function pointer to determine what the datatype is and free it */
-void freeList( LinkedList* listPtr, void(*funcPtr)(void*) )
-{
-    LinkedListNode* currNode, *nextNode;
-    
-    currNode = listPtr->head;
-
-    while( currNode != NULL )
-    {
-        nextNode = currNode->next;
-        (*funcPtr)(currNode->data);
-        free( currNode );
-        currNode = nextNode;
-    }
-    free( listPtr );
-}    

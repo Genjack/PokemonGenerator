@@ -1,5 +1,11 @@
-DRAW 5
-ROTATE -90
-DRAW 3
-ROTATE 90
-DRAW 5
+rotate -45
+move 30
+FG 1
+pattern #
+DRAW 10
+rotate 90
+dRAW 10
+rOTate 90
+DRAw 10
+rotate 90
+draw 10
