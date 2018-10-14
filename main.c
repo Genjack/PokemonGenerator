@@ -25,7 +25,7 @@ int main( int argc, char* argv[] )
     FILE* flPtr; /*logPtr; Pointer to file being read from */
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
-    int numLines;
+    int numLines = 0;
     if( argc != 2 )
     {
         printf( "Error: Filename required as extra command-line parameter.\n" );
@@ -46,8 +46,8 @@ int main( int argc, char* argv[] )
 
             /* Read file into linked list.
             Function dec/desc: file.h */
-            numLines = getNumLines( flPtr );
-            rewind( flPtr ); /* Reset the file Pointer */
+            /*numLines = getNumLines( flPtr );
+            rewind( flPtr );  Reset the file Pointer */
             
             /* Print dashes to denote beginning of log file instance */            
             printDashes();

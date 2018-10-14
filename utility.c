@@ -58,7 +58,10 @@ void readList( LinkedList* list, Tracker* currState )
         list node -> void* data (CmdStruct) -> command/value fields */
         cmd = (CmdStruct*)(removeFirst( list ));
         (*cmd->command)(cmd->value, currState);
+        free( cmd->value );
+        cmd->value = NULL;
         free( cmd );
+        cmd = NULL;
     }
     penDown();
 }

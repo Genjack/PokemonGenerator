@@ -17,7 +17,7 @@
 #include <string.h>
 #include "linked_list.h"
 
-#define VAL_STR_LEN 4 /* Allows for 3 digits plus null term (i.e. 360) */
+/*#define VAL_STR_LEN 4  Allows for 3 digits plus null term (i.e. 360) */
 
 /** 
 *  STRUCT: Tracker
@@ -78,7 +78,7 @@ typedef void (*CmdFunc)(char*, Tracker*); /*type name is 'CmdFunc' */
 typedef struct
 {
     CmdFunc command;            /* Function pointer */
-    char value[VAL_STR_LEN];    /* imported values from file */
+    char* value;    /* imported values from file */
 } CmdStruct;
 
 
