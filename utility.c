@@ -98,6 +98,8 @@ void drawLine( char* inDistance, Tracker* currState )
     #endif
 
     line( (int)x1, (int)y1, (int)x2-1, (int)y2, &plotPoint, (void*)currState );
+    
+    /*calcMovement( 1, currState );*/
 
     #ifndef DEBUG    
     printLog( x1, y1, currState, "DRAW" ); 
@@ -178,8 +180,8 @@ void calcMovement( char* inDistance, Tracker* currState )
 {
     double angleInRadians, distance;
 
-    distance = atof( inDistance );
-    
+    distance = atof(inDistance);
+
     angleInRadians = ( currState->currAngle * PI ) / 180.0;
      
     currState->currX += distance * cos( angleInRadians );

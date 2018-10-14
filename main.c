@@ -25,7 +25,7 @@ int main( int argc, char* argv[] )
     FILE* flPtr; /*logPtr; Pointer to file being read from */
     LinkedList* list;
     Tracker* currState; /* pointer to Tracker struct for current state */    
-    int numLines = 0;
+    int valid;
     if( argc != 2 )
     {
         printf( "Error: Filename required as extra command-line parameter.\n" );
@@ -46,26 +46,29 @@ int main( int argc, char* argv[] )
 
             /* Read file into linked list.
             Function dec/desc: file.h */
-            /*numLines = getNumLines( flPtr );
-            rewind( flPtr );  Reset the file Pointer */
-            
-            /* Print dashes to denote beginning of log file instance */            
-            printDashes();
-
-            if( readInFile( flPtr, list, numLines ) != 0) /* 0 == FAIL */
+            valid = checkWordValidity( flPtr );
+            if( valid == VALID )
             {
-                /* Create a Tracker struct, to keep track of position 
-                Function dec/desc: utility.h */
-                currState = createTracker();
+                rewind( flPtr ); /* Reset the file Pointer */
+                
+                /* Print dashes to denote beginning of log file instance */            
+                printDashes();
 
-                /* Read the linked list node-by-node and initiate commands.
-                Function dec/desc: utility.h */
-                readList( list, currState );
-                free( currState );
+                if( readInFile( flPtr, list ) != 0) /* 0 == FAIL */
+                {
+                    /* Create a Tracker struct, to keep track of position 
+                    Function dec/desc: utility.h */
+                    currState = createTracker();
+
+                    /* Read the linked list node-by-node and initiate commands.
+                    Function dec/desc: utility.h */
+                    readList( list, currState );
+                    free( currState );
+                }
             }
             else
             {
-                printf( "Error: Invalid file. Exiting.\n" );
+                printf( "Error: invalid file. Exiting.\n" );
             }
             fclose( flPtr );
             free( list );

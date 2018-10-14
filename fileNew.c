@@ -16,42 +16,33 @@
 */
 
 #include "file.h"
+/********************* ADDED WHILE LOOP - CAN REMOVE *********************/
    
-int readInFile( FILE* flPtr, LinkedList* list )
+int readInFile( FILE* flPtr, LinkedList* list, int lineCount )
 {
     /* fscanf - check string - then fscanf with format based on string */
     char cmd[CMD_STR_LEN]; /* Array of chars for the command */
-    char* val; /* Smaller array for the values */
-    int nRead, checkChar; 
+    char val[VAL_STR_LEN]; /* Smaller array for the values */
+    int nRead = 0; 
+    int ii;
     int valid = VALID; /* 1 is !FALSE */
     CmdStruct* instruction; /* Struct to store in each linked list node */
     
-    while( valid && !(feof( flPtr )) )
+    for( ii = 0; ii < lineCount; ii++ )
     {
-        /* Malloc new char* for the command value */
-        val = (char*)malloc(10 * sizeof(char));
+        /* Struct contents: command (FP) and char[4] value */ 
+        /* malloc new CmdStruct - declared in main.h */
+        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+
         /* Read the first line, expecting two valid strings. */
-        nRead = fscanf( flPtr, "%7s %9s", cmd, val );
+        nRead = fscanf( flPtr, "%s %s", cmd, val );
         if( ( nRead != 2 ) ) 
         {
             valid = NOT_VALID; /* EOF - get outta town */
-            free( val );
+            free( instruction );
         }
         else
         {
-            /* Initial check: Ensure that the number read in is not all there is
-               to it by seeking the newline character.
-               checkChar is an int, but it uses the ASCII values to be a char.*/
-            checkChar = fgetc(flPtr);
-            while( checkChar != '\n' && checkChar != EOF )
-            {
-                /* Reallocate var char* with 1 extra space for each while loop
-                   iteration, accounting for the null terminator, hence +2 */
-                val = (char*)realloc( val, strlen(val)+2 );
-                val[strlen(val)] = checkChar;
-                checkChar = fgetc(flPtr);
-            }
-            fscanf(flPtr, "\n");
             toUpperCase( cmd ); /* Ensure in upper case */
             if( strcmp( cmd, "FG" ) == 0 ) /* FOREGROUND CHANGE */
             {
@@ -62,11 +53,7 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
-                    /* set command to address of setFG() */
+                    /* set command to address of setFG(), defined utility.c */
                     instruction->command = &setFG;
                 }
             }
@@ -78,10 +65,6 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
                     instruction->command = &setBG;
                 }
             }
@@ -93,10 +76,6 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
                     instruction->command = &moveCursor;
                 }
             }
@@ -108,10 +87,6 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
                     instruction->command = &setPattern;
                 }
             }
@@ -123,10 +98,6 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
                     /* Call landing function to prepare calling of line
                        Located in utility.c */
                     instruction->command = &drawLine;
@@ -140,37 +111,31 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 }
                 else
                 {
-                    /* malloc new CmdStruct - declared in main.h */
-                    instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-                    /* Struct contents: command (FP) and char[4] value */ 
-
                     instruction->command = &changeAngle;
                 }
             }
             /* If not finished, assign char* to the struct field
                completing the struct, and add to the back of the list. */
-            if( valid )
-            {
+            if( !feof(flPtr) )
+            {    
                 /* Populate struct and insert into list */
-                instruction->value = val;
+                strncpy( instruction->value, val, VAL_STR_LEN );
                 /* Store the line in new LinkedListNode and add to list*/
                 insertLast( list, instruction ); 
             } 
         }
-
-        /* Terminate loop if file is invalid or end of file is reached. */
-    }
-    return valid; /* Send validation integer back to main */
-} /*Finish readFile()*/
+    /* Terminate loop if file is invalid or end of file is reached. */
+    }  /* END FOR LOOP */
+    return valid;
+}
 
 int checkWordValidity( FILE* flPtr )
 {
     int valid = VALID;
     int wordCount = 0;
-    int newLineSearch;
+    char newLineSearch;
     int done = FALSE;
     int inWord = FALSE;
-    int len = 0;
 
     do
     {
@@ -181,38 +146,26 @@ int checkWordValidity( FILE* flPtr )
         }
         else if( newLineSearch != ' ' && newLineSearch != '\n' )
         {
-            if( !inWord )
-            {
-                inWord = TRUE;
-                wordCount++;
-            }
-            if( wordCount == 1 )
-            {
-                len++;
-            }
+            inWord = TRUE;
         }
-        else if( newLineSearch == ' ' && inWord )
+        else if( newLineSearch == ' ' )
         {
-            if( wordCount == 1 && len > 7 )
-            {
-                valid = NOT_VALID;
-            }
-            len = 0;
             inWord = FALSE;
+            wordCount++;
         }
         else if( newLineSearch == '\n' ) /*empty line causes dump*/
         {
+            lineCount++;
             if( wordCount != 2 )
             {
                 valid = NOT_VALID;
+                wordCount = 0;
             }
-            wordCount = 0;
-            inWord = FALSE;
         }
     } while( !done && valid );
     return valid;
 }    
-
+    
 /** 
 * FUNCTION: toUpperCase
 * PURPOSE:
@@ -248,7 +201,11 @@ int validateColour( char* val, int min, int max )
     int valCheck; /* int to store the line value in (not used yet) */
     int success = 1; /* returns -1 if invalid, 1 if valid */
     char* endPtr;
-    valCheck = strtol( val, &endPtr, 10 );
+    /* strol's second parameter is an endPtr which points to the character 
+       immediately following the string.
+       strtol's third parameter is a 'base' parameter - in this case, we are
+       working with base 10, so we put 10 */
+    valCheck = strtol( val, &endPtr, 10 ); 
     if( ( valCheck < min ) || ( valCheck > max ) )
     {
         success = -1;

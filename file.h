@@ -32,7 +32,6 @@
 * FUNCTION: readInFile
 * IMPORTS: File* - the file to read in, hopefully containing valid commands.
 *          LinkedList* - Pointer to a linked list to store structs.
-*          int - a count to keep track of lines, counted previously.
 * PURPOSE: 
 *    This is a key method that reads in the file and makes the necessary
 *    calls to storage and other methods so that the draw and move operations
@@ -45,20 +44,9 @@
 *    Returns an integer representing a success code - if -1, it's failed, if 0
 *    it's all good.
 **/
-int readInFile( FILE*, LinkedList*, int );
+int readInFile( FILE*, LinkedList* );
 
-/**
-* FUNCTION: getNumLines
-* IMPORTS: FILE* - Pointer to the file opened in main.c.
-* PURPOSE: 
-*    Due to issues I'll explain in my report, I created a function to 
-*    count the number of lines in the file, to use in readInFile().
-* HOW IT WORKS:
-*    Uses fgetc() to parse each character in the file; if it hits the end of
-*    file character, it exits the while loop, or if it finds a '\n' character, 
-*    it adds one to the line count. Empty lines are accounted for later on.
-**/ 
-int getNumLines( FILE* );
+int checkWordValidity( FILE* );
 
 /** 
 * FUNCTION: toUpperCase
