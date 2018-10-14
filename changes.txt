@@ -1,0 +1,10 @@
+FILE.C
+- Removing for loop at line 30;
+    - adding a do while loop, with an if( !feof() ) check at line 32
+    - Commented out ii at line 26.
+    - added the while condition at line 129, plus a couple of comments.
+- Removed struct malloc at 35;
+    - Mallocing within each valid if block to avoid memory leaksa
+    - Changing if( !feof(flPtr) ) to if( valid ) at line 139.
+        - Might have to add '&& !(feof(flPtr)) to line 139 as well.
+        - added.

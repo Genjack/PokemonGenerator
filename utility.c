@@ -48,6 +48,10 @@ void readList( LinkedList* list, Tracker* currState )
     CmdStruct* cmd;
 
     clearScreen();
+    #ifdef SIMPLE
+    setFgColour( 0 );
+    setBgColour( 7 );
+    #endif
     while( list->count > 0 )
     {
         /* Call the function contained within each node:

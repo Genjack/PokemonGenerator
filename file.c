@@ -23,109 +23,134 @@ int readInFile( FILE* flPtr, LinkedList* list, int lineCount )
     /* fscanf - check string - then fscanf with format based on string */
     char cmd[CMD_STR_LEN]; /* Array of chars for the command */
     char val[VAL_STR_LEN]; /* Smaller array for the values */
-    int nRead, ii;
+    int nRead; /*ii*/
     int valid = VALID; /* 1 is !FALSE */
     CmdStruct* instruction; /* Struct to store in each linked list node */
     
-    for( ii = 0; ii < lineCount; ii++ )
+    do
     {
-        /* malloc new CmdStruct - declared in main.h */
-        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
-        /* Struct contents: command (FP) and char[4] value */ 
+        if( !feof( flPtr ) )
+        {
+            /* Read the first line, expecting two valid strings. */
+            nRead = fscanf( flPtr, "%s %s", cmd, val );
+            if( ( nRead != 2 ) ) 
+            {
+                valid = NOT_VALID; /* EOF - get outta town */
+            }
+            else
+            {
+                toUpperCase( cmd ); /* Ensure in upper case */
+                if( strcmp( cmd, "FG" ) == 0 ) /* FOREGROUND CHANGE */
+                {
+                    /* Ensure that it is an integer, and it's within range */
+                    if( validateColour( val, 0, 15 ) != valid )
+                    {
+                        valid = NOT_VALID; 
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
 
-        /* Read the first line, expecting two valid strings. */
-        nRead = fscanf( flPtr, "%s %s", cmd, val );
-        if( ( nRead != 2 ) ) 
-        {
-            valid = NOT_VALID; /* EOF - get outta town */
-        }
-        else
-        {
-            toUpperCase( cmd ); /* Ensure in upper case */
-            if( strcmp( cmd, "FG" ) == 0 ) /* FOREGROUND CHANGE */
-            {
-                /* Ensure that it is an integer, and it's within range */
-                if( validateColour( val, 0, 15 ) != valid )
-                {
-                    valid = NOT_VALID; 
+                        /* set command to address of setFG() */
+                        instruction->command = &setFG;
+                    }
                 }
-                else
+                else if( strcmp( cmd, "BG" ) == 0 ) /* BACKGROUND CHANGE */
                 {
-                    /* set command to address of setFG(), defined utility.c */
-                    instruction->command = &setFG;
+                    if( validateColour( val, 0, 7 ) != valid )
+                    {
+                        valid = NOT_VALID;
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
+
+                        instruction->command = &setBG;
+                    }
                 }
+                else if( strcmp( cmd, "MOVE" ) == 0 ) /* MOVE COMMAND */
+                {
+                    if( validateReal( val ) != valid )
+                    {
+                        valid = NOT_VALID;
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
+
+                        instruction->command = &moveCursor;
+                    }
+                }
+                else if( strcmp( cmd, "PATTERN" ) == 0 ) /* PATTERN CHANGE */
+                {
+                    if( validateChar( val ) != valid )
+                    {
+                        valid = NOT_VALID;
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
+
+                        instruction->command = &setPattern;
+                    }
+                }
+                else if( strcmp( cmd, "DRAW" ) == 0 ) /* DRAW COMMAND */ 
+                {
+                    if( validateReal( val ) != valid )
+                    {
+                        valid = NOT_VALID;
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
+
+                        /* Call landing function to prepare calling of line
+                           Located in utility.c */
+                        instruction->command = &drawLine;
+                    }
+                }
+                else if( strcmp( cmd, "ROTATE" ) == 0 ) /* ROTATE ANGLE */
+                {
+                    if(validateReal(val) != valid )
+                    {
+                        valid = NOT_VALID;
+                    }
+                    else
+                    {
+                        /* malloc new CmdStruct - declared in main.h */
+                        instruction = (CmdStruct*)malloc(sizeof(CmdStruct));
+                        /* Struct contents: command (FP) and char[4] value */ 
+
+                        instruction->command = &changeAngle;
+                    }
+                }
+                /* If not finished, assign char* to the struct field
+                   completing the struct, and add to the back of the list. */
+                if( valid && (!( feof( flPtr ) ) ) )
+                {
+                    printf( "valid last block, 11?\n" );
+                    /* Populate struct and insert into list */
+                    strncpy( instruction->value, val, VAL_STR_LEN );
+                    /* Store the line in new LinkedListNode and add to list*/
+                    insertLast( list, instruction ); 
+                } 
             }
-            else if( strcmp( cmd, "BG" ) == 0 ) /* BACKGROUND CHANGE */
-            {
-                if( validateColour( val, 0, 7 ) != valid )
-                {
-                    valid = NOT_VALID;
-                }
-                else
-                {
-                    instruction->command = &setBG;
-                }
-            }
-            else if( strcmp( cmd, "MOVE" ) == 0 ) /* MOVE COMMAND */
-            {
-                if( validateReal( val ) != valid )
-                {
-                    valid = NOT_VALID;
-                }
-                else
-                {
-                    instruction->command = &moveCursor;
-                }
-            }
-            else if( strcmp( cmd, "PATTERN" ) == 0 ) /* PATTERN CHANGE */
-            {
-                if( validateChar( val ) != valid )
-                {
-                    valid = NOT_VALID;
-                }
-                else
-                {
-                    instruction->command = &setPattern;
-                }
-            }
-            else if( strcmp( cmd, "DRAW" ) == 0 ) /* DRAW COMMAND */ 
-            {
-                if( validateReal( val ) != valid )
-                {
-                    valid = NOT_VALID;
-                }
-                else
-                {
-                    /* Call landing function to prepare calling of line
-                       Located in utility.c */
-                    instruction->command = &drawLine;
-                }
-            }
-            else if( strcmp( cmd, "ROTATE" ) == 0 ) /* ROTATE ANGLE */
-            {
-                if(validateReal(val) != valid )
-                {
-                    valid = NOT_VALID;
-                }
-                else
-                {
-                    instruction->command = &changeAngle;
-                }
-            }
-            /* If not finished, assign char* to the struct field
-               completing the struct, and add to the back of the list. */
-            if( !feof(flPtr) )
-            {    
-                /* Populate struct and insert into list */
-                strncpy( instruction->value, val, VAL_STR_LEN );
-                /* Store the line in new LinkedListNode and add to list*/
-                insertLast( list, instruction ); 
-            } 
-        }
-    /* Terminate loop if file is invalid or end of file is reached. */
-    }  /* END FOR LOOP */
-    return valid;
-}
+        }/*End IF NOT feof() check.
+
+    Terminate loop if file is invalid or end of file is reached. */
+    } while( valid )
+    return valid; /* Send validation integer back to main */
+} /*Finish readFile()*/
 
 int getNumLines( FILE* flPtr )
 {
