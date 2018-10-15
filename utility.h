@@ -14,7 +14,7 @@
 #include "main.h"
 #include "effects.h"
 
-#define PI 3.14159265358979323846
+#define PI 3.141592653589793238462643
 
 /**
 * FUNCTION createTracker
@@ -189,6 +189,6 @@ double roundReal( double );
 *    This function is called by both moveCursor() and drawLine(), providing
 *    the math required to accurately render the input file.
 **/
-void calcMovement( char*, Tracker* );
+void calcMovement( double, Tracker* );
 
 #endif

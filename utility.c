@@ -68,38 +68,44 @@ void readList( LinkedList* list, Tracker* currState )
 
 void moveCursor( char* inDistance, Tracker* currState )
 {
-    double x1, y1;
+    double x1, y1, distance;
     /* Usage of atof VALIDATED because I have already VALIDATED (file.c) */
+
+    distance = atof(inDistance);
 
     x1 = currState->currX;
     y1 = currState->currY;
 
-    calcMovement( inDistance, currState );
+    calcMovement( distance, currState );
 
     printLog( x1, y1, currState, "MOVE" );
 }
 
 void drawLine( char* inDistance, Tracker* currState )
 {
-    double x1, y1, x2, y2; /* cast to ints when calling line() */
+    double x1, y1, x2, y2, distance; /* cast to ints when calling line() */
 
     x1 = currState->currX;
     y1 = currState->currY; /* original position is set to x/y1. */
 
-    calcMovement( inDistance, currState );
+    distance = atof(inDistance);
 
-    x1 = roundReal( x1 );
+    calcMovement( distance-1, currState );
+
+    /*x1 = roundReal( x1 );
     y1 = roundReal( y1 );
     x2 = roundReal( currState->currX );
-    y2 = roundReal( currState->currY );
+    y2 = roundReal( currState->currY );*/
+    x2 = currState->currX;
+    y2 = currState->currY;
     /* ... calls to line() to be preceded by relevant log file entries..."*/
     #ifdef DEBUG
     printLog( x1, y1, currState, "DRAW" ); 
     #endif
 
-    line( (int)x1, (int)y1, (int)x2-1, (int)y2, &plotPoint, (void*)currState );
-    
-    /*calcMovement( 1, currState );*/
+    line( (int)roundReal(x1), (int)roundReal(y1), (int)roundReal(x2), (int)roundReal(y2), &plotPoint, (void*)currState );
+
+    calcMovement( 1, currState );
 
     #ifndef DEBUG    
     printLog( x1, y1, currState, "DRAW" ); 
@@ -123,12 +129,9 @@ void changeAngle( char* angleChange, Tracker* currState )
     {
         temp -= 360.0;
     }
-    if( temp < 0.0 )
+    while( temp < 0.0 )
     {
-        while( temp < 0.0 )
-        {
-            temp += 360.0;
-        }
+        temp += 360.0;
     }
     currState->currAngle = temp;
 }
@@ -176,14 +179,12 @@ double roundReal( double num )
     return rounded;
 }
 
-void calcMovement( char* inDistance, Tracker* currState )
+void calcMovement( double inDistance, Tracker* currState )
 {
-    double angleInRadians, distance;
-
-    distance = atof(inDistance);
+    double angleInRadians;
 
     angleInRadians = ( currState->currAngle * PI ) / 180.0;
      
-    currState->currX += distance * cos( angleInRadians );
-    currState->currY -= distance * sin( angleInRadians );
+    currState->currX += inDistance * cos( angleInRadians );
+    currState->currY -= inDistance * sin( angleInRadians );
 }

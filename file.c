@@ -59,6 +59,8 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if( validateColour( val, 0, 15 ) != valid )
                 {
                     valid = NOT_VALID; 
+                    printf( "Colour change out of bounds;\n" );
+                    free( val );
                 }
                 else
                 {
@@ -75,6 +77,9 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if( validateColour( val, 0, 7 ) != valid )
                 {
                     valid = NOT_VALID;
+                    printf( "Colour change out of bounds;\n" );
+                    free( val );
+                    /*fflush(stdout);*/
                 }
                 else
                 {
@@ -90,6 +95,8 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if( validateReal( val ) != valid )
                 {
                     valid = NOT_VALID;
+                    printf( "Invalid real number parsed;\n" );
+                    free( val );
                 }
                 else
                 {
@@ -105,6 +112,8 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if( validateChar( val ) != valid )
                 {
                     valid = NOT_VALID;
+                    printf( "pattern value invalid;" );
+                    free( val );
                 }
                 else
                 {
@@ -120,6 +129,8 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if( validateReal( val ) != valid )
                 {
                     valid = NOT_VALID;
+                    printf( "Invalid real number parsed;\n" );
+                    free( val );
                 }
                 else
                 {
@@ -137,6 +148,8 @@ int readInFile( FILE* flPtr, LinkedList* list )
                 if(validateReal(val) != valid )
                 {
                     valid = NOT_VALID;
+                    printf( "Invalid real number parsed;\n" );
+                    free( val );
                 }
                 else
                 {
@@ -166,6 +179,7 @@ int readInFile( FILE* flPtr, LinkedList* list )
 int checkWordValidity( FILE* flPtr )
 {
     int valid = VALID;
+    int lineCount = 0;
     int wordCount = 0;
     int newLineSearch;
     int done = FALSE;
@@ -196,6 +210,7 @@ int checkWordValidity( FILE* flPtr )
             if( wordCount == 1 && len > 7 )
             {
                 valid = NOT_VALID;
+                printf( "Line %d invalid;\n", lineCount );
             }
             len = 0;
             inWord = FALSE;
@@ -206,6 +221,7 @@ int checkWordValidity( FILE* flPtr )
             {
                 valid = NOT_VALID;
             }
+            lineCount++;
             wordCount = 0;
             inWord = FALSE;
         }
