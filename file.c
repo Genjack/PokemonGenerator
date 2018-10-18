@@ -160,6 +160,13 @@ int readInFile( FILE* flPtr, LinkedList* list )
                     instruction->command = &changeAngle;
                 }
             }
+/************************** MODIFICATION ********************************/
+            else
+            {
+                valid = NOT_VALID;
+                printf( "Invalid command given\n." );
+                free( val );
+            }
             /* If not finished, assign char* to the struct field
                completing the struct, and add to the back of the list. */
             if( valid )
@@ -172,6 +179,20 @@ int readInFile( FILE* flPtr, LinkedList* list )
         }
 
         /* Terminate loop if file is invalid or end of file is reached. */
+    /*CmdStruct* instruction; Struct to store in each linked list node */
+        if( !valid && list != NULL )
+        {
+            while( list->count > 0 )
+            {
+                /*freeList( list, &freeStruct );*/
+                /* Free the list that's been built so far */
+                instruction = (CmdStruct*)(removeFirst( list ));
+                free( instruction->value );
+                instruction->value = NULL;
+                free( instruction );
+                instruction = NULL;
+            }
+        }   
     }
     return valid; /* Send validation integer back to main */
 } /*Finish readFile()*/
@@ -317,3 +338,12 @@ void printLog( double x1, double y1, Tracker* currState, char* cmd )
         (double)currState->currX, (double)currState->currY );
     fclose( logPtr );
 }
+/********************** MODIFICATION **********************/
+/* need to do write function to free structs in list */
+/*void freeStruct( void* structToFree )
+{
+   CmdStruct* structPtr = (CmdStruct*)(structToFree);
+   free( structPtr->value );
+   free( structPtr );
+}*/
+    

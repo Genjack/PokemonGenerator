@@ -1,0 +1,2 @@
+ROTATE -45
+DRAW 10

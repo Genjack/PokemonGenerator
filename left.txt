@@ -18,3 +18,4 @@ FUNCTION DESCRIPTIONS
 - main.c/h DONE
 - utility.c/h DONE
 
+Talk about free() modifications.

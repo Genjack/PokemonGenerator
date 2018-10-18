@@ -65,6 +65,10 @@ int main( int argc, char* argv[] )
                     readList( list, currState );
                     free( currState );
                 }
+                else
+                {
+                    printf( "Error: invalid file. Exiting.\n" );
+                }
             }
             else
             {
